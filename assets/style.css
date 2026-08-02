@@ -1,6 +1,8 @@
 :root {
   --primary-bg: #EEEADF;
   --text-color: #382a09;
+  --accent-green: #BECEB3;
+  --accent-red: #ff7423;
 }
 
 h1,
@@ -17,9 +19,22 @@ strong {
   color: var(--text-color);
 }
 
-a {
-  color: var(--text-color);
+nav {
+  a {
+    color: var(--text-color);
+  }
+
+  a.active {
+    background-color: var(--accent-green);
+    padding: 2px 5px;
+    border-radius: 5px;
+  }
 }
+
+a {
+  color: var(--accent-red);
+}
+
 
 html {
   color: var(--text-color);
