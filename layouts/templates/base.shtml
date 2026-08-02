@@ -28,6 +28,12 @@
 		<footer>
 			<hr>
 			<h5>SITE UNDER CONSTRUCTION</h5>
+                        <div class="contact-container">
+                                <a href="mailto:contact@hauter.dev"><img src="$site.asset('email-svgrepo-com.svg').link()"></a>
+                                <a href="https://codeberg.org/trevorhauter"><img src="$site.asset('codeberg-svgrepo-com.svg').link()"></a>
+                                <a href="https://github.com/trevorhauter"><img src="$site.asset('github-142-svgrepo-com.svg').link()"></a>
+                                <a href="https://www.linkedin.com/in/trevor-hauter-6182741b8/"><img src="$site.asset('linkedin-svgrepo-com.svg').link()"></a>
+                        </div>
 		</footer>
 	</body>
 </html>
