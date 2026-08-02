@@ -1,8 +1,8 @@
 :root {
   --primary-bg: #EEEADF;
-  --text-color: #382a09;
-  --accent-green: #BECEB3;
-  --accent-red: #ff7423;
+  --text-color: #2E2A2C;
+  --primary-accent: #8B0000;
+  --secondary-accent: #C3D5B5;
 }
 
 h1,
@@ -25,14 +25,14 @@ nav {
   }
 
   a.active {
-    background-color: var(--accent-green);
+    background-color: var(--secondary-accent);
     padding: 2px 5px;
     border-radius: 5px;
   }
 }
 
 a {
-  color: var(--accent-red);
+  color: var(--primary-accent);
 }
 
 
