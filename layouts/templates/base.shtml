@@ -27,7 +27,7 @@
 		<super>
 		<footer>
 			<hr>
-			<h5>SITE UNDER CONSTRUCTION</h5>
+			<h5>Let's connect!</h5>
                         <div class="contact-container">
                                 <a href="mailto:contact@hauter.dev"><img src="$site.asset('email-svgrepo-com.svg').link()"></a>
                                 <a href="https://codeberg.org/trevorhauter"><img src="$site.asset('codeberg-svgrepo-com.svg').link()"></a>

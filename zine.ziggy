@@ -1,4 +1,8 @@
 .zine_version = "0.13.0",
+.supermd = .{
+    .headings_h2 = true,
+    .auto_target_blank = true,
+},
 .site = .simple(.{
     .title = "Trevor Hauter",
     .host_url = "https://hauter.dev",

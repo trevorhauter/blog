@@ -13,7 +13,7 @@
 <body id="body">
 	<div :html="$page.content()"></div>
 	<div>
-		<h2>Post list</h2>
+		<h2>Blog posts</h2>
 		<div :loop="$page.subpages()">
 			<span class="date" :text="$loop.it.date.format('January 02, 2006')"></span>
 			<a class="title" href="$loop.it.link()">
