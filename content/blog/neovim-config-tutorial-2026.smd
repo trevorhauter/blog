@@ -4,9 +4,13 @@
 .layout = "post.shtml",
 ---
 
-Hello! In this tutorial we will go over how to create a modern IDE inside of Neovim from scratch. You will learn how to structure your configuration, install and configure plugins, and set up core parts of an IDE such as fuzzy file finding and code completion. I've created a [tutorial repository](https://github.com/trevorhauter/neovim-2026-tutorial) you can use as reference while you follow along. Let's jump right in!
+Welcome! In this tutorial we will go over how to create a modern IDE inside of Neovim from scratch. You will learn how to structure your configuration, install and configure plugins, and set up core parts of an IDE such as fuzzy file finding and code completion. I've created a [tutorial repository](https://github.com/trevorhauter/neovim-2026-tutorial) you can use as reference while you follow along.
+
+This tutorial assumes you are familiar with the basics of vim motions. If you are unfamiliar or get stuck, keep this handy [Neovim cheatsheet](https://neovimcheatsheet.com/) close by for reference. Now let's jump right in!
 
 First things first, let's [install Neovim](https://neovim.io/doc/install/). Once you've done that, you can launch neovim inside a terminal with the `nvim` command.
+
+# Creating project structure
 
 Next, let's create a directory to store our configuration. 
 
@@ -14,7 +18,7 @@ Next, let's create a directory to store our configuration.
 mkdir ~/.config/nvim
 ```
 
-This is where neovim will look every time it's launched. I recommend storing this in version control, either with your other dotfiles or in a repository on its own. To prevent overloading of the term "configuration", I'm going to refer to the files inside the `~/.config/nvim` directory as our *project* going forward.
+This is where neovim will look every time it's launched. I recommend storing this in version control, either with your other dotfiles or in a repository of its own. To prevent overloading of the term "configuration", I'm going to refer to the files inside the `~/.config/nvim` directory as our *project* going forward.
 
 Let's establish our core project structure. This will keep things nice and organized as we expand/modify our project!
 
@@ -38,7 +42,7 @@ Which yields the following tree structure
         └── init.lua
 ```
 
-Now, when neovim launches, it will look in the `init.lua` file at our project root. Let's point the `init.lua` file to our `lua/config/options.lua`, which is going to be the central file that loads everything else we care about.
+Now, when neovim launches, it will look in `init.lua` at our project root. Let's point `init.lua` to `lua/config/options.lua`, which is going to be the central file that loads everything else we care about.
 
 ```lua
 -- ~/.config/nvim/init.lua
@@ -48,7 +52,7 @@ require("config.options")
 Now, let's add some of our first settings into our `lua/config/options.lua` file!
 
 ```lua
--- /lua/config/options.lua
+-- ~/.config/nvim//lua/config/options.lua
 vim.g.mapleader = " " -- Prefix used for many keybinds
 
 require("plugins") -- Will load plugins directory automatically
@@ -73,12 +77,12 @@ vim.opt.swapfile = false
 vim.opt.wrap = true
 ```
 
-This will get us started with some good defaults. If you aren't sure what a setting does and would like to know, simply type `:h $setting` inside Neovim to open up the documentation! Or use a search engine to learn more. There's no right settings to have here, this is just where I've landed personally, and is a fine starting point.
+This will get us started with some good defaults. If you aren't sure what a setting does and would like to know, simply type `:h $setting` inside Neovim to open up the documentation, or use a search engine to learn more. There's no right settings to have here, this is just where I've landed personally, and is a fine starting point.
 
-Next, in our `lua/plugins/init.lua` file, let's add some simple code so that when new plugins are added, Neovim loads them in automatically. This will make managing our project a lot easier! :-)
+Next, in `lua/plugins/init.lua`, let's add some simple code so that when we create new files in the plugins directory, Neovim loads them in automatically. This will make managing our project a lot easier! :-)
 
 ```lua
--- lua/plugins/init.lua
+-- ~/.config/nvim/lua/plugins/init.lua
 -- Require all files in directory
 
 local config_path = vim.fn.stdpath("config")
@@ -100,7 +104,47 @@ do
 end
 ```
 
-Now, when we want to add new plugins, this code will find them and let Neovim know, so we don't have to worry about requiring everything manually ourselves. How fun! At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/7c2bac2d147a6ec4b918efaf4b9e71ee3e5907cd).
+Nice! At this point, we have our structure in place, and are ready to add our first plugin! At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/7c2bac2d147a6ec4b918efaf4b9e71ee3e5907cd).
 
-Now we're off to the races! First thing I like to do is select a theme. Neovim is just as much about form as it is function! My favorite theme is [gruvbox-material](https://github.com/sainnhe/gruvbox-material), but you can choose any you like.
+# Installing plugins
 
+The plugin ecosystem in Neovim is rich and diverse, and is one of the things that makes the editor so great. You can find tools and solutions for just about any workflow, allowing you to have an editor that is truly yours. Some even refer to Neovim as a PDE (personal development environment) for this very reason.
+
+For our first plugin, let's install a theme. My favorite is [gruvbox-material](https://github.com/sainnhe/gruvbox-material), which is actually the theme used in the syntax highlighting in this post, but you can choose whatever you like!
+
+Let's create a file in our plugins directory to configure our theme
+
+First, let's create our file
+
+```sh
+# From ~/.config/nvim
+touch lua/plugins/theme.lua
+```
+
+Now add our configuration to it
+
+```lua
+-- ~/.config/nvim/lua/plugins/theme.lua
+vim.pack.add({ "https://github.com/sainnhe/gruvbox-material" })
+
+if vim.fn.has("termguicolors") == 1 then
+    vim.opt.termguicolors = true
+end
+
+-- Theme specific plugin options
+vim.g.gruvbox_material_enable_italic = true
+vim.g.gruvbox_material_enable_bold = true
+
+-- Can be used in tandem with a transparent terminal 
+-- setup to make Neovim transparent!
+vim.g.gruvbox_material_transparent_background = 1
+vim.o.background = "dark"
+
+vim.g.gruvbox_material_background = "soft"
+vim.g.gruvbox_material_better_performance = 1
+
+-- Important! This tells neovim what colorscheme to use
+vim.cmd.colorscheme("gruvbox-material")
+```
+
+Once you've saved that to your file, the next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and wow! You've just installed your very first plugin!
