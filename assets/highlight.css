@@ -5,9 +5,32 @@
   --cyan: #56b6c2;
   --light-red: #e06c75;
   --dark-red: #be5046;
-  --comment-gray: #5c6370;
+  --comment-gray: #a89984;
   --magenta: #c678dd;
+
+  /* my attempt at gruvbox-material */
+  --bg0: #282828;
+  --fg1: #DDC7A1;
+  --red: #EA6962;
+  --green: #a9b665;
+  --blue: #7daea3;
+  --purple: #D3869b;
+  --gray: #7c6f64;
+  --orange: #E78A4e;
+
+  /* now actually applying it */
+  --canvas-background: var(--bg0);
+  --code: var(--fg1);
+  --function: var(--red);
+  --string: var(--green);
+  /* --variable: var(--blue); */
+  --builtin: var(--purple);
+  --comment: var(--gray);
+  --boolean: var(--purple);
+  --number: var(--purple);
+  --operator: var(--orange);
 }
+
 
 pre {
   border-top: 1px solid white;
@@ -15,23 +38,59 @@ pre {
   padding: 10px 5px;
 }
 
-code {
-  color: var(--cyan);
+pre {
+  background-color: var(--canvas-background);
+  border-radius: 6px;
 }
 
-code .keyword,
+code {
+  background-color: var(--canvas-background);
+  padding: 2px;
+  border-radius: 4px;
+  color: var(--code);
+}
+
+code .operator, .keyword_operator {
+  color: var(--operator);
+}
+
+code .boolean {
+  color: var(--boolean);
+}
+
+code .function_builtin {
+  color: var(--builtin);
+}
+
+code .function_call, .function {
+  /* TODO: Do we really need this important call? */
+  color: var(--green) !important;
+}
+
+code .variable_builtin.field {
+  color: var(--blue);
+}
+
 code .type {
-  color: var(--light-yellow);
+  color: var(--type);
+}
+
+code .keyword, .keyword_function, .keyword_return, .conditional {
+  color: var(--function);
 }
 
 code .string {
-  color: var(--dark-yellow);
+  color: var(--string);
 }
 
-code .numeric.constant {
-  color: var(--magenta);
+code .numeric.constant, .number {
+  color: var(--number);
 }
 
-code .function {
-  color: var(--blue);
+code .tag {
+  color: var(--tag);
+}
+
+code .comment {
+  color: var(--comment);
 }
