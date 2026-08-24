@@ -53,27 +53,41 @@ Now, let's add some of our first settings into our `lua/config/options.lua` file
 
 ```lua
 -- ~/.config/nvim//lua/config/options.lua
-vim.g.mapleader = " " -- Prefix used for many keybinds
+vim.g.mapleader = " " -- Prefix used for keybinds
 
 require("plugins") -- Will load plugins directory automatically
 
-vim.diagnostic.config({ virtual_text = true }) -- Enables lsp warnings
-
--- Personal preferences!
+-- Set default indentation length (in spaces)
 vim.bo.shiftwidth = 2
 vim.bo.softtabstop = 2
 vim.bo.tabstop = 2
 
-vim.o.winborder = "rounded"
-
+-- Use spaces for tab in insert mode ;)
 vim.opt.expandtab = true
+
+-- Don't highlight every search result when performing a `/` search
 vim.opt.hlsearch = false
+
+-- Show line numbers in editor
 vim.opt.nu = true
+
+-- Make line numbers relative to cursor (really great for efficient motions!)
 vim.opt.relativenumber = true
+
+-- Always keep 8 lines of buffer at the top or bottom
 vim.opt.scrolloff = 8
+
+-- Leaves space for signs and other hints in line number column
 vim.opt.signcolumn = "yes"
+
+-- Better indentation
 vim.opt.smartindent = true
+
+-- I have swapfiles disabled for convenience, 
+-- may want to enable if memory is a concern
 vim.opt.swapfile = false
+
+-- Wrap text at edge of screen
 vim.opt.wrap = true
 ```
 
@@ -84,7 +98,6 @@ Next, in `lua/plugins/init.lua`, let's add some simple code so that when we crea
 ```lua
 -- ~/.config/nvim/lua/plugins/init.lua
 -- Require all files in directory
-
 local config_path = vim.fn.stdpath("config")
 local directory_name = "plugins"
 
@@ -104,7 +117,7 @@ do
 end
 ```
 
-Nice! At this point, we have our structure in place, and are ready to add our first plugin! At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/7c2bac2d147a6ec4b918efaf4b9e71ee3e5907cd).
+Nice! At this point, we have our structure in place, and are ready to add our first plugin! At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/2411a130c0b8021d7ff2c69566d2f5138e7ce654).
 
 # Installing plugins
 
@@ -147,4 +160,6 @@ vim.g.gruvbox_material_better_performance = 1
 vim.cmd.colorscheme("gruvbox-material")
 ```
 
-Once you've saved that to your file, the next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and wow! You've just installed your very first plugin!
+The next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and wow! You've just installed your very first plugin, and your snazzy new theme looks amazing! This will be the general flow for installing and using new plugins.
+
+
