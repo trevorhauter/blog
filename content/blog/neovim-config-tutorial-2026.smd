@@ -171,11 +171,97 @@ Let's create a plugin file to contain our configuration
 touch lua/plugins/nvim-tree.lua
 ```
 
-```sh
+```lua
+-- ~/.config/nvim/lua/plugins/nvim-tree.lua
+vim.pack.add({
+    -- web-devicons are a dependency for nvim-tree, but also many other plugins
+    { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+    { src = "https://github.com/nvim-tree/nvim-tree.lua" },
+})
 
+-- Turn off netrw (builtin Neovim file explorer)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+require("nvim-tree").setup({
+    view = {
+        -- Adapt size of explorer to file/directory names
+        adaptive_size = true,
+        -- Show relative line numbers in file explorer
+        number = true,
+        relativenumber = true,
+    },
+    -- Hide git/gitignore by default
+    filters = { custom = { "^.git$", "^.gitignore$" } },
+})
+
+
+local nvim_tree_api = require("nvim-tree.api")
+
+-- Toggle nvim-tree in normal mode with ctrl + n
+vim.keymap.set(
+    "n",
+    "<C-n>",
+    nvim_tree_api.tree.toggle,
+    { noremap = true, silent = true }
+)
+
+-- Open your current file in nvim-tree with <leader> + n
+vim.keymap.set(
+    "n",
+    "<leader>n",
+    function()
+        nvim_tree_api.tree.find_file({
+            open = true,
+            update_root = "<bang>",
+            focus = true,
+        })
+    end,
+    { noremap = true, silent = true }
+)
 ```
 
-TODO: Go into detail for nvim-tree and fzf, then just high level references/links to other plugins we have chosen. 
+After installing our plugins, we now have a beautiful file explorer right inside of neovim! Let's go over a few details of what we've just created. For each of these keymaps, the first argument is the value, "n". This means that each keybind will work only in normal mode. The second argument is the keybind that triggers this new feature, and the third is the function it triggers. We can always find our current file in nvim-tree with `<leader>n`, (remember, we mapped "space" to "leader"), which is really great for jumping to neighboring files, or orienting ourselves in a codebase!
+
+Now let's kick it up a notch. Let's add the powerful search plugin [fzf.lua](https://github.com/ibhagwan/fzf-lua). This will allow us to easily search for files, use grep (or [ripgrep](https://github.com/BurntSushi/ripgrep)) to search for patterns and phrases, or easily filter/search results from commands like `git status` to easily find the files you were just working in!
+
+Before we set up our plugin configuration, we'll need to install a few dependencies! ([Learn more about fzf.lua dependencies](https://github.com/ibhagwan/fzf-lua#dependencies))
+
+- [fzf (required)](https://github.com/junegunn/fzf#installation)
+- [ripgrep (optional)](https://github.com/BurntSushi/ripgrep#installation) - better `grep` utility
+- [fd (optional)](https://github.com/sharkdp/fd#installation) - better `find` utility
+
+Now that we have those installed, let's add the configuration for our plugin!
+
+```sh
+# From ~/.config/nvim
+touch lua/plugins/fzf.lua
+```
+
+```lua
+-- ~/.config/nvim/lua/plugins/fzf.lua
+
+vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
+
+local fzf = require("fzf-lua")
+
+-- Live grep project
+vim.keymap.set({ "n", "v" }, "<leader>/", fzf.live_grep)
+
+-- Search files returned from git status
+vim.keymap.set({ "n", "v" }, "<leader>d", fzf.git_status)
+
+-- Search files throughout the project
+vim.keymap.set({ "n", "v" }, "<leader>f", fzf.files)
+
+-- Search
+vim.keymap.set({ "n", "v" }, "sw", fzf.grep_cword)
+```
+
+Wow, that was easy! Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see many more commands you can add to make your editor even more powerful.
+
+Lastly, you may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
+
 
 # Installing and configuring language servers
 
