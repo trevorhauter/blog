@@ -1,6 +1,6 @@
 ---
 .title = "How to build a full IDE in Neovim from scratch (0.12)",
-.date = .date("2026-08-22T00:00:00"),
+.date = .date("2026-08-30T00:00:00"),
 .layout = "post.shtml",
 ---
 
@@ -162,9 +162,11 @@ vim.cmd.colorscheme("gruvbox-material")
 
 The next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and wow! You've just installed your very first plugin, and your snazzy new theme looks amazing! This will be the general flow for installing and using new plugins.
 
-Now, let's focus on project navigation! Every great IDE needs a file explorer, and we need look no further than [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua)
+But wait, what are these options I've set? How did I know I needed them? Well, to answer this, we should look at our themes [repository](https://github.com/sainnhe/gruvbox-material). For all plugins, instructions on what options are available, what the defaults are, and how to change them are provided (or linked to) in the README. I encourage you to read through the documentation for plugins you are interested in, as they will have everything you need to get up and running quickly! As for what to change when you see each plugin, your preferences will vary, there's no right answer! The joy of experimenting and finding what is right for you is what makes Neovim such a great editor.
 
-Let's create a plugin file to contain our configuration
+Now, let's focus on project navigation. Every great IDE needs a file explorer, and we need look no further than [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua)
+
+Let's create a file for our plugin and add our configuration.
 
 ```sh
 # From ~/.config/nvim
@@ -225,13 +227,13 @@ After installing our plugins, we now have a beautiful file explorer right inside
 
 Now let's kick it up a notch. Let's add the powerful search plugin [fzf.lua](https://github.com/ibhagwan/fzf-lua). This will allow us to easily search for files, use grep (or [ripgrep](https://github.com/BurntSushi/ripgrep)) to search for patterns and phrases, or easily filter/search results from commands like `git status` to easily find the files you were just working in!
 
-Before we set up our plugin configuration, we'll need to install a few dependencies! ([Learn more about fzf.lua dependencies](https://github.com/ibhagwan/fzf-lua#dependencies))
+Before we set up our plugin configuration, we'll need to install a few dependencies. ([Learn more about fzf.lua dependencies](https://github.com/ibhagwan/fzf-lua#dependencies))
 
 - [fzf (required)](https://github.com/junegunn/fzf#installation)
 - [ripgrep (optional)](https://github.com/BurntSushi/ripgrep#installation) - better `grep` utility
 - [fd (optional)](https://github.com/sharkdp/fd#installation) - better `find` utility
 
-Now that we have those installed, let's add the configuration for our plugin!
+Now that we have those installed, let's add the configuration for our plugin.
 
 ```sh
 # From ~/.config/nvim
@@ -254,14 +256,15 @@ vim.keymap.set({ "n", "v" }, "<leader>d", fzf.git_status)
 -- Search files throughout the project
 vim.keymap.set({ "n", "v" }, "<leader>f", fzf.files)
 
--- Search
+-- Search for the highlighted phrase, or the word under your cursor
 vim.keymap.set({ "n", "v" }, "sw", fzf.grep_cword)
 ```
 
-Wow, that was easy! Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see many more commands you can add to make your editor even more powerful.
+Wow, that was easy! Now we can easily find what we need in our project with a few simple keybinds. Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see many more commands you can add to make your editor even more powerful.
 
-Lastly, you may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
+You may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
 
+At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/f7088a4c1f16956d50848c1f00a2a9d6bd738b53). There are a number of other quality of life plugins I like to add to my editor. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
 
 # Installing and configuring language servers
 
