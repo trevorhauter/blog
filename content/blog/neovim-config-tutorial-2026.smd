@@ -259,12 +259,16 @@ vim.keymap.set({ "n", "v" }, "<leader>f", fzf.files)
 -- Search for the highlighted phrase, or the word under your cursor
 vim.keymap.set({ "n", "v" }, "sw", fzf.grep_cword)
 ```
-
 Wow, that was easy! Now we can easily find what we need in our project with a few simple keybinds. Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see many more commands you can add to make your editor even more powerful.
 
 You may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
 
 At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/f7088a4c1f16956d50848c1f00a2a9d6bd738b53). There are a number of other quality of life plugins I like to add to my editor. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
+
+- [eyeliner.nvim](https://github.com/jinh0/eyeliner.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/commit/92403e8471df94300376457b72b0505c01a717ed) - Visual plugin that shows f/F indicators
+    - See note below for explanation on color overrides
+
+**Note**: Some of these configurations, such as the one for eyeliner.nvim include (optional) color overrides, because the default colors do not provide enough contrast with the recommended theme for this project. This is achieved with a separate `lua/config/colors.lua` file, which is loaded in after everything at the bottom of `lua/options.lua`. This ensures that the color overrides are applied after all the plugins have been loaded in. You may also see entries in a file called `nvim-pack-lock.json`. This is automatically generated and managed by Neovim, and you can safely ignore them.
 
 # Installing and configuring language servers
 
