@@ -117,7 +117,7 @@ do
 end
 ```
 
-Nice! At this point, we have our structure in place, and are ready to add our first plugin! At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/2411a130c0b8021d7ff2c69566d2f5138e7ce654).
+Nice! At this point, we have our structure in place, and are ready to add our first plugin!
 
 # Installing plugins
 
@@ -263,7 +263,41 @@ Wow, that was easy! Now we can easily find what we need in our project with a fe
 
 You may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
 
-At this point, [your project should look like this](https://github.com/trevorhauter/neovim-2026-tutorial/tree/f7088a4c1f16956d50848c1f00a2a9d6bd738b53). There are a number of other quality of life plugins I like to add to my editor. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
+Lastly, let's install a very important plugin [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter). This will give us better syntax highlighting and enable lots of little quality of life features like snippets, context queues, and more in our editor. [Read more about Treesitter on Learn nvim](https://vonheikemen.github.io/learn-nvim/feature/treesitter.html#what-s-treesitter)
+
+First off, we must install our [dependencies](https://github.com/nvim-treesitter/nvim-treesitter#requirements). Once we've done that, we're ready to add our configuration!
+
+```sh
+# From ~/.config/nvim
+touch lua/plugins/nvim-treesitter.lua
+```
+
+```lua
+-- ~/.config/nvim/lua/plugins/nvim-treesitter.lua
+vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
+
+local treesitter = require("nvim-treesitter")
+
+treesitter.install({"python", "zig"})
+
+-- auto-highlight files when opened
+vim.api.nvim_create_autocmd("FileType", {
+    callback = function(args)
+        if
+            vim.list_contains(
+                treesitter.get_installed(),
+                vim.treesitter.language.get_lang(args.match)
+            )
+        then
+            vim.treesitter.start(args.buf)
+        end
+    end,
+})
+```
+
+This will automatically install the Treesitter parsers for the languages you choose. View the [nvim-treesitter documentation](https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md) to see a list of available parsers.
+
+There are a number of other quality of life plugins I like to add to my editor. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
 
 - [eyeliner.nvim](https://github.com/jinh0/eyeliner.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/commit/92403e8471df94300376457b72b0505c01a717ed) - Visual plugin that shows f/F indicators
     - See note below for explanation on color overrides
