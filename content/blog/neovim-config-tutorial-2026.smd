@@ -89,6 +89,11 @@ vim.opt.swapfile = false
 
 -- Wrap text at edge of screen
 vim.opt.wrap = true
+
+-- Adjust styling of all floating windows
+vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
+vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
+vim.api.nvim_set_hl(0, "FloatTitle", { link = "Title" })
 ```
 
 This will get us started with some good defaults. If you aren't sure what a setting does and would like to know, simply type `:h $setting` inside Neovim to open up the documentation, or use a search engine to learn more. There's no right settings to have here, this is just where I've landed personally, and is a fine starting point.
@@ -301,8 +306,19 @@ There are a number of other quality of life plugins I like to add to my editor. 
 
 - [eyeliner.nvim](https://github.com/jinh0/eyeliner.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/commit/92403e8471df94300376457b72b0505c01a717ed) - Visual plugin that shows f/F indicators
     - See note below for explanation on color overrides
+- [gitportal.nvim](https://codeberg.org/trevorhauter/gitportal.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/gitportal.lua) - Jump between your editor and git host *fast*
+- [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/gitsigns.lua) - Git integration
+    - See note below for explanation on color overrides
+- [leap.nvim](https://codeberg.org/andyg/leap.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/leap.lua) - Neovims answer to the mouse
+- [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/lualine.lua) - Fast configurable status line
+- [neoscroll.nvim](https://github.com/karb94/neoscroll.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/neoscroll.lua) - Smooth scrolling
+- [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/nvim-autopairs.lua) - Autopair functionality brough to Nvim
+- [nvim-surround](https://github.com/kylechui/nvim-surround) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/nvim-surround.lua) - Add/change/delete surrounding delimiter pairs
+- [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/toggleterm.lua) - Improved integrated terminal in Neovim
 
-**Note**: Some of these configurations, such as the one for eyeliner.nvim include (optional) color overrides, because the default colors do not provide enough contrast with the recommended theme for this project. This is achieved with a separate `lua/config/colors.lua` file, which is loaded in after everything at the bottom of `lua/options.lua`. This ensures that the color overrides are applied after all the plugins have been loaded in. You may also see entries in a file called `nvim-pack-lock.json`. This is automatically generated and managed by Neovim, and you can safely ignore them.
+**Note**: Some of these configurations, such as the one for eyeliner.nvim, or gitsigns.nvim include (optional) color overrides, because the default colors do not provide enough contrast with the recommended theme for this project. This is achieved with a separate [lua/config/colors.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/colors.lua) file, which is loaded in after everything at the bottom of [lua/options.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/options.lua#L44). This ensures that the color overrides are applied after all the plugins have been loaded in. You may also see entries in a file called `nvim-pack-lock.json`. This is automatically generated and managed by Neovim, and you can safely ignore them.
+
+There are many more great plugins available and I highly encourage you to explore and see what else is out there! Be warned - you may end up spending all of your time customizing your editor... It can be a dangerous game!
 
 # Installing and configuring language servers
 
