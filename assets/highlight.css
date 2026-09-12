@@ -94,3 +94,7 @@ code .tag {
 code .comment {
   color: var(--comment);
 }
+
+code .diff_plus {
+  color: var(--green);
+}

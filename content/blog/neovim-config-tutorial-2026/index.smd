@@ -1,6 +1,6 @@
 ---
 .title = "How to build a full IDE in Neovim from scratch (0.12)",
-.date = .date("2026-08-30T00:00:00"),
+.date = .date("2026-09-12T00:00:00"),
 .layout = "post.shtml",
 ---
 
@@ -322,4 +322,111 @@ There are many more great plugins available and I highly encourage you to explor
 
 # Installing and configuring language servers
 
-I hope you're sitting down, because now we get to the really fun part. Adding code completion and intellisense to our editor! 
+Now we get to the really fun part. Adding code completion, diagnostics (errors & warnings), code navigation (go-to definition), and more to our editor! You can learn more about how lsps work on [lean-nvim](https://vonheikemen.github.io/learn-nvim/feature/lsp-setup.html).
+
+We're going to need a nice way to manage our language servers. You may want to program in any number of languages, and Neovim is the editor that can support them all.
+
+For that, we are going to use 3 plugins. [mason.nvim](https://github.com/mason-org/mason.nvim), to manage the installation of language servers, and [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) & [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to hook everything up correctly behind the scenes for our editor. Don't worry, using this is much simpler than it may seem! Let's take a look at what installation looks l ike
+
+First, make sure you have the necessary [requirements for mason.nvim](https://github.com/mason-org/mason.nvim#requirements). Then we can add our configuration.
+
+```sh
+# From ~/.config/nvim
+touch lua/plugins/mason.lua
+```
+
+```lua
+# ~/.config/nvim/lua/plugins/mason.lua
+vim.pack.add({
+    { src = "https://github.com/williamboman/mason.nvim" },
+    { src = "https://github.com/williamboman/mason-lspconfig.nvim" },
+    { src = "https://github.com/neovim/nvim-lspconfig" },
+})
+```
+
+Now, let's tell `mason.nvim` what language servers we'd like to have installed for us. I'm adding the language servers for Python and Zig here, but you can find a language server for just about any language you could want in the [mason registry](https://mason-registry.dev/registry/list)
+
+```sh
+# From ~/.config/nvim
+touch lua/config/lsps.lua
+```
+
+```lua
+# ~/.config/nvim/lua/config/lsps.lua
+require("mason").setup({})
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        "pyright",
+        "zls",
+    },
+    automatic_enable = true,
+})
+```
+
+Then let's ensure `lua/config/lsps.lua` is called on startup by adding a line in `lua/config/options.lua`
+
+```diff
+# ~/.config/nvim/lua/config/options.lua
+require("plugins")
++require("config.lsps")
+```
+
+And just like that, the next time we launch Neovim we should install our dependencies, and `mason` will automatically handle the installation of these language servers for us. Beautiful!
+
+We're almost there, but we have a few more plugins to really give us a great experience. This includes better autocomplete, and lots of helpful snippets to speed up our development! We're going to install [blink.cmp](https://github.com/Saghen/blink.cmp) to power our completion, & [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) to provide us with lots of great snippets.
+
+First, we're going to need to [install Rust](https://rust-lang.org/tools/install/), as it is a dependency for `blink.cmp`.
+
+Once you've done that, let's go ahead and add our configuration
+
+```sh
+# From ~/.config/nvim
+touch lua/plugins/blink.lua
+```
+
+```lua
+# ~/.config/nvim/lua/plugins/blink.lua
+vim.pack.add({
+    "https://github.com/saghen/blink.lib", -- dependency for blink.cmp
+    "https://github.com/saghen/blink.cmp",
+    "https://github.com/rafamadriz/friendly-snippets",
+})
+
+local cmp = require("blink.cmp")
+cmp.build():pwait()
+cmp.setup()
+```
+
+Now, once you relaunch Neovim, everything should install! It might take a bit the first time as everything is compiling and getting ready on your computer.
+
+Lastly, let's configure some keybinds for our project so we can use all of our beautiful language server shortcuts that will now be available to us! I'm including a generic keybind file since we are using vims native lsp actions. They are powered under the hood by the plugins we just installed and configured.
+
+```sh
+# From ~/.config/nvim
+touch /lua/config/keymaps.lua
+```
+
+```lua
+# ~/.config/nvim/lua/config/keymaps.lua
+-- LSP keybinds
+vim.keymap.set("n", "gd", vim.lsp.buf.definition) -- Go to definition
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration) -- Go to declaration
+vim.keymap.set("n", "gr", vim.lsp.buf.references) -- Find references
+vim.keymap.set("n", "K", vim.lsp.buf.hover) -- Show documentation
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename) -- Rename symbol
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action) -- Code actions
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation) -- Go to implementation
+vim.keymap.set("n", "gy", vim.lsp.buf.type_definition) -- Go to type definition
+
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev) -- Previous diagnostic
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next) -- Next diagnostic
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float) -- Show error
+```
+
+Now let's open a file and test it!
+
+[]($video.asset("code_completion.mov").autoplay(true).muted(true).loop(true).controls(true))
+
+Wow, that wasn't so bad, and we nearly have a complete modern IDE!
+
+# Installing linters & auto-formatters
