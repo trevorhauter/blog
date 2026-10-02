@@ -1,16 +1,16 @@
 ---
-.title = "How to build a full IDE in Neovim from scratch (0.12)",
-.date = .date("2026-09-12T00:00:00"),
+.title = "How to build a full IDE in Neovim from scratch (2026)",
+.date = .date("2026-10-01T00:00:00"),
 .layout = "post.shtml",
 ---
 
 Welcome! In this tutorial we will go over how to create a modern IDE inside of Neovim from scratch. You will learn how to structure your configuration, install and configure plugins, and set up core parts of an IDE such as fuzzy file finding and code completion. I've created a [tutorial repository](https://github.com/trevorhauter/neovim-2026-tutorial) you can use as reference while you follow along.
 
-This tutorial assumes you are familiar with the basics of vim motions. If you are unfamiliar or get stuck, keep this handy [Neovim cheatsheet](https://neovimcheatsheet.com/) close by for reference. Now let's jump right in!
+This tutorial assumes you are familiar with the basics of vim motions. If you are unfamiliar or get stuck, keep this handy [vim cheatsheet](https://vim.rtorr.com/) close by for reference. Now let's jump right in!
 
 First things first, let's [install Neovim](https://neovim.io/doc/install/). Once you've done that, you can launch neovim inside a terminal with the `nvim` command.
 
-# Creating project structure
+# Project structure
 
 Next, let's create a directory to store our configuration. 
 
@@ -22,7 +22,7 @@ This is where neovim will look every time it's launched. I recommend storing thi
 
 Let's establish our core project structure. This will keep things nice and organized as we expand/modify our project!
 
-We're going to create a directory for our core configuration options (native nvim settings), another for plugins, and an init file to tell Neovim where to look when everything is loaded up. We can create all of these by running the following commands inside our root project directory `~/.config/nvim`
+We're going to create a directory for our core configuration options (native nvim settings & generic settings), another for plugins, and an init file to tell Neovim where to look when everything is loaded up. We can create all of these by running the following commands inside our root project directory `~/.config/nvim`
 
 ```sh
 touch init.lua && mkdir lua \
@@ -30,7 +30,7 @@ touch init.lua && mkdir lua \
 && mkdir lua/plugins && touch lua/plugins/init.lua
 ```
 
-Which yields the following tree structure
+This yields the following tree structure
 
 ```
 ~/.config/nvim
@@ -71,7 +71,7 @@ vim.opt.hlsearch = false
 -- Show line numbers in editor
 vim.opt.nu = true
 
--- Make line numbers relative to cursor (really great for efficient motions!)
+-- Make line numbers relative to cursor (great for efficient motions!)
 vim.opt.relativenumber = true
 
 -- Always keep 8 lines of buffer at the top or bottom
@@ -96,7 +96,7 @@ vim.api.nvim_set_hl(0, "FloatBorder", { link = "FloatBorder" })
 vim.api.nvim_set_hl(0, "FloatTitle", { link = "Title" })
 ```
 
-This will get us started with some good defaults. If you aren't sure what a setting does and would like to know, simply type `:h $setting` inside Neovim to open up the documentation, or use a search engine to learn more. There's no right settings to have here, this is just where I've landed personally, and is a fine starting point.
+There are many more options we can set, but this will get us started with some good defaults. If you aren't sure what a setting does, simply type `:h $setting` inside Neovim to open up the documentation, or use a search engine to learn more.
 
 Next, in `lua/plugins/init.lua`, let's add some simple code so that when we create new files in the plugins directory, Neovim loads them in automatically. This will make managing our project a lot easier! :-)
 
@@ -126,20 +126,11 @@ Nice! At this point, we have our structure in place, and are ready to add our fi
 
 # Installing plugins
 
-The plugin ecosystem in Neovim is rich and diverse, and is one of the things that makes the editor so great. You can find tools and solutions for just about any workflow, allowing you to have an editor that is truly yours. Some even refer to Neovim as a PDE (personal development environment) for this very reason.
+The plugin ecosystem in Neovim is rich and diverse, and is one of the highlights of the editor. You can find tools and solutions for just about any workflow, allowing you to have an editor that is truly yours. Some even refer to Neovim as a PDE (personal development environment) for this very reason.
 
-For our first plugin, let's install a theme. My favorite is [gruvbox-material](https://github.com/sainnhe/gruvbox-material), which is actually the theme used in the syntax highlighting in this post, but you can choose whatever you like!
+For our first plugin, let's install a theme. My favorite is [gruvbox-material](https://github.com/sainnhe/gruvbox-material), which is also the theme used for syntax highlighting on this site, but you can choose whatever you like!
 
-Let's create a file in our plugins directory to configure our theme
-
-First, let's create our file
-
-```sh
-# From ~/.config/nvim
-touch lua/plugins/theme.lua
-```
-
-Now add our configuration to it
+Let's create a file in our plugins directory and add our configuration for our theme
 
 ```lua
 -- ~/.config/nvim/lua/plugins/theme.lua
@@ -165,18 +156,13 @@ vim.g.gruvbox_material_better_performance = 1
 vim.cmd.colorscheme("gruvbox-material")
 ```
 
-The next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and wow! You've just installed your very first plugin, and your snazzy new theme looks amazing! This will be the general flow for installing and using new plugins.
+The next time you open Neovim, you should be prompted to install your theme. Confirm the download, relaunch and bam! You've just installed your very first plugin, and your snazzy new theme looks amazing! This will be the general flow for installing and using new plugins.
 
-But wait, what are these options I've set? How did I know I needed them? Well, to answer this, we should look at our themes [repository](https://github.com/sainnhe/gruvbox-material). For all plugins, instructions on what options are available, what the defaults are, and how to change them are provided (or linked to) in the README. I encourage you to read through the documentation for plugins you are interested in, as they will have everything you need to get up and running quickly! As for what to change when you see each plugin, your preferences will vary, there's no right answer! The joy of experimenting and finding what is right for you is what makes Neovim such a great editor.
+You can configure your theme further by looking at the documentation in the themes [repository](https://github.com/sainnhe/gruvbox-material). I encourage you to read through the documentation for plugins you are interested in, as they will have everything you need to get up and running quickly!
 
 Now, let's focus on project navigation. Every great IDE needs a file explorer, and we need look no further than [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua)
 
 Let's create a file for our plugin and add our configuration.
-
-```sh
-# From ~/.config/nvim
-touch lua/plugins/nvim-tree.lua
-```
 
 ```lua
 -- ~/.config/nvim/lua/plugins/nvim-tree.lua
@@ -228,9 +214,9 @@ vim.keymap.set(
 )
 ```
 
-After installing our plugins, we now have a beautiful file explorer right inside of neovim! Let's go over a few details of what we've just created. For each of these keymaps, the first argument is the value, "n". This means that each keybind will work only in normal mode. The second argument is the keybind that triggers this new feature, and the third is the function it triggers. We can always find our current file in nvim-tree with `<leader>n`, (remember, we mapped "space" to "leader"), which is really great for jumping to neighboring files, or orienting ourselves in a codebase!
+After installing our plugins, we now have a beautiful file explorer right inside of neovim! (Remember, `<leader>` is set to space)
 
-Now let's kick it up a notch. Let's add the powerful search plugin [fzf.lua](https://github.com/ibhagwan/fzf-lua). This will allow us to easily search for files, use grep (or [ripgrep](https://github.com/BurntSushi/ripgrep)) to search for patterns and phrases, or easily filter/search results from commands like `git status` to easily find the files you were just working in!
+Now let's kick it up a notch. Let's add the powerful search plugin [fzf.lua](https://github.com/ibhagwan/fzf-lua). This will allow us to easily search for files, use grep (or [ripgrep](https://github.com/BurntSushi/ripgrep)) to search for patterns and phrases, or filter/search results from commands like `git status` to find the files you were just working in!
 
 Before we set up our plugin configuration, we'll need to install a few dependencies. ([Learn more about fzf.lua dependencies](https://github.com/ibhagwan/fzf-lua#dependencies))
 
@@ -239,11 +225,6 @@ Before we set up our plugin configuration, we'll need to install a few dependenc
 - [fd (optional)](https://github.com/sharkdp/fd#installation) - better `find` utility
 
 Now that we have those installed, let's add the configuration for our plugin.
-
-```sh
-# From ~/.config/nvim
-touch lua/plugins/fzf.lua
-```
 
 ```lua
 -- ~/.config/nvim/lua/plugins/fzf.lua
@@ -264,18 +245,11 @@ vim.keymap.set({ "n", "v" }, "<leader>f", fzf.files)
 -- Search for the highlighted phrase, or the word under your cursor
 vim.keymap.set({ "n", "v" }, "sw", fzf.grep_cword)
 ```
-Wow, that was easy! Now we can easily find what we need in our project with a few simple keybinds. Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see many more commands you can add to make your editor even more powerful.
+It's just that easy! Now we can find what we need in our project with a few simple keybinds. Be sure to check out the [fzf.lua commands](https://github.com/ibhagwan/fzf-lua#commands) to see what else you can add to make your editor even more powerful.
 
-You may notice our keymaps look slightly different. Here, the first argument is an array with two values "n" & "v". This means the keybinds will work in normal /and/ visual mode. Type `:h vim.keymap.set` to learn more about the different ways you can set keybinds!
-
-Lastly, let's install a very important plugin [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter). This will give us better syntax highlighting and enable lots of little quality of life features like snippets, context queues, and more in our editor. [Read more about Treesitter on Learn nvim](https://vonheikemen.github.io/learn-nvim/feature/treesitter.html#what-s-treesitter)
+Next, let's install an important plugin, [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter). This will give us better syntax highlighting and enable quality of life features like snippets, context queues, and more in our editor. [Read more about Treesitter on Learn nvim](https://vonheikemen.github.io/learn-nvim/feature/treesitter.html#what-s-treesitter)
 
 First off, we must install our [dependencies](https://github.com/nvim-treesitter/nvim-treesitter#requirements). Once we've done that, we're ready to add our configuration!
-
-```sh
-# From ~/.config/nvim
-touch lua/plugins/nvim-treesitter.lua
-```
 
 ```lua
 -- ~/.config/nvim/lua/plugins/nvim-treesitter.lua
@@ -300,9 +274,9 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 ```
 
-This will automatically install the Treesitter parsers for the languages you choose. View the [nvim-treesitter documentation](https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md) to see a list of available parsers.
+This will automatically install the Treesitter parsers for the languages you choose. Check the [nvim-treesitter documentation](https://github.com/nvim-treesitter/nvim-treesitter/blob/main/SUPPORTED_LANGUAGES.md) to see a list of available parsers.
 
-There are a number of other quality of life plugins I like to add to my editor. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
+There are a number of other plugins I use everyday. To keep this post from being too long, I will leave a list of recommended plugins and their configurations in our tutorial repository below. Feel free to pick and choose whatever seems interesting to you!
 
 - [eyeliner.nvim](https://github.com/jinh0/eyeliner.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/commit/92403e8471df94300376457b72b0505c01a717ed) - Visual plugin that shows f/F indicators
     - See note below for explanation on color overrides
@@ -316,27 +290,20 @@ There are a number of other quality of life plugins I like to add to my editor. 
 - [nvim-surround](https://github.com/kylechui/nvim-surround) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/nvim-surround.lua) - Add/change/delete surrounding delimiter pairs
 - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) | [(configuration)](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/plugins/toggleterm.lua) - Improved integrated terminal in Neovim
 
-**Note**: Some of these configurations, such as the one for eyeliner.nvim, or gitsigns.nvim include (optional) color overrides, because the default colors do not provide enough contrast with the recommended theme for this project. This is achieved with a separate [lua/config/colors.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/colors.lua) file, which is loaded in after everything at the bottom of [lua/options.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/options.lua#L44). This ensures that the color overrides are applied after all the plugins have been loaded in. You may also see entries in a file called `nvim-pack-lock.json`. This is automatically generated and managed by Neovim, and you can safely ignore them.
+**Note**: Some of these configurations, such as the one for eyeliner.nvim, or gitsigns.nvim include (optional) color overrides, because the default colors do not provide enough contrast with the recommended theme for this project. This is achieved with a separate [lua/config/colors.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/colors.lua) file, which is loaded in after everything at the bottom of [lua/options.lua](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/options.lua#L44). This ensures that the color overrides are applied after all the plugins have been loaded in.
 
-There are many more great plugins available and I highly encourage you to explore and see what else is out there! Be warned - you may end up spending all of your time customizing your editor... It can be a dangerous game!
+There are countless great plugins available and I encourage you to explore and see what else is out there! Be warned - you may end up spending all of your time customizing your editor...
 
 # Installing and configuring language servers
 
-Now we get to the really fun part. Adding code completion, diagnostics (errors & warnings), code navigation (go-to definition), and more to our editor! You can learn more about how lsps work on [lean-nvim](https://vonheikemen.github.io/learn-nvim/feature/lsp-setup.html).
+Now we get to the really fun part. Adding code completion, diagnostics (errors & warnings), code navigation (go-to definition), and more to our editor! You can learn more about how lsps work on [Learn nvim](https://vonheikemen.github.io/learn-nvim/feature/lsp-setup.html).
 
-We're going to need a nice way to manage our language servers. You may want to program in any number of languages, and Neovim is the editor that can support them all.
-
-For that, we are going to use 3 plugins. [mason.nvim](https://github.com/mason-org/mason.nvim), to manage the installation of language servers, and [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) & [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to hook everything up correctly behind the scenes for our editor. Don't worry, using this is much simpler than it may seem! Let's take a look at what installation looks l ike
+Neovim can support any language you throw at it. To make installing and using language servers simple, we're going to use 3 plugins. [mason.nvim](https://github.com/mason-org/mason.nvim), to manage the installation of language servers, and [mason-lspconfig.nvim](https://github.com/mason-org/mason-lspconfig.nvim) & [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) to hook everything up behind the scenes. Don't worry, using this is much simpler than it may seem! Let's take a look at what installation looks like.
 
 First, make sure you have the necessary [requirements for mason.nvim](https://github.com/mason-org/mason.nvim#requirements). Then we can add our configuration.
 
-```sh
-# From ~/.config/nvim
-touch lua/plugins/mason.lua
-```
-
 ```lua
-# ~/.config/nvim/lua/plugins/mason.lua
+-- ~/.config/nvim/lua/plugins/mason.lua
 vim.pack.add({
     { src = "https://github.com/williamboman/mason.nvim" },
     { src = "https://github.com/williamboman/mason-lspconfig.nvim" },
@@ -344,15 +311,10 @@ vim.pack.add({
 })
 ```
 
-Now, let's tell `mason.nvim` what language servers we'd like to have installed for us. I'm adding the language servers for Python and Zig here, but you can find a language server for just about any language you could want in the [mason registry](https://mason-registry.dev/registry/list)
-
-```sh
-# From ~/.config/nvim
-touch lua/config/lsps.lua
-```
+Now, let's tell `mason.nvim` what language servers we'd like to have installed. I'm adding the language servers for [Python](https://www.python.org/) and [Zig](https://ziglang.org/) here, but you can find a language server for just about any language you could want in the [mason registry](https://mason-registry.dev/registry/list).
 
 ```lua
-# ~/.config/nvim/lua/config/lsps.lua
+-- ~/.config/nvim/lua/config/lsps.lua
 require("mason").setup({})
 require("mason-lspconfig").setup({
     ensure_installed = {
@@ -363,7 +325,7 @@ require("mason-lspconfig").setup({
 })
 ```
 
-Then let's ensure `lua/config/lsps.lua` is called on startup by adding a line in `lua/config/options.lua`
+Then let's call `lua/config/lsps.lua` on startup by adding a line in `lua/config/options.lua` ([options file for reference](https://github.com/trevorhauter/neovim-2026-tutorial/blob/main/lua/config/options.lua))
 
 ```diff
 # ~/.config/nvim/lua/config/options.lua
@@ -371,21 +333,16 @@ require("plugins")
 +require("config.lsps")
 ```
 
-And just like that, the next time we launch Neovim we should install our dependencies, and `mason` will automatically handle the installation of these language servers for us. Beautiful!
+The next time we launch Neovim we will install our dependencies, then `mason` will automatically handle the installation of these language servers for us. Beautiful!
 
-We're almost there, but we have a few more plugins to really give us a great experience. This includes better autocomplete, and lots of helpful snippets to speed up our development! We're going to install [blink.cmp](https://github.com/Saghen/blink.cmp) to power our completion, & [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) to provide us with lots of great snippets.
+We're almost there, but we have a few more plugins to really give us a great experience. This includes better autocomplete, and lots of helpful snippets to speed up our development! We're going to install [blink.cmp](https://github.com/Saghen/blink.cmp) to power our completion, & [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) to provide us with our snippets.
 
 First, we're going to need to [install Rust](https://rust-lang.org/tools/install/), as it is a dependency for `blink.cmp`.
 
 Once you've done that, let's go ahead and add our configuration
 
-```sh
-# From ~/.config/nvim
-touch lua/plugins/blink.lua
-```
-
 ```lua
-# ~/.config/nvim/lua/plugins/blink.lua
+-- ~/.config/nvim/lua/plugins/blink.lua
 vim.pack.add({
     "https://github.com/saghen/blink.lib", -- dependency for blink.cmp
     "https://github.com/saghen/blink.cmp",
@@ -397,17 +354,12 @@ cmp.build():pwait()
 cmp.setup()
 ```
 
-Now, once you relaunch Neovim, everything should install! It might take a bit the first time as everything is compiling and getting ready on your computer.
+Now, once you relaunch Neovim, everything will install. It will take a bit the first time as everything is compiling and getting ready on your computer.
 
 Lastly, let's configure some keybinds for our project so we can use all of our beautiful language server shortcuts that will now be available to us! I'm including a generic keybind file since we are using vims native lsp actions. They are powered under the hood by the plugins we just installed and configured.
 
-```sh
-# From ~/.config/nvim
-touch /lua/config/keymaps.lua
-```
-
 ```lua
-# ~/.config/nvim/lua/config/keymaps.lua
+-- ~/.config/nvim/lua/config/keymaps.lua
 -- LSP keybinds
 vim.keymap.set("n", "gd", vim.lsp.buf.definition) -- Go to definition
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration) -- Go to declaration
@@ -438,4 +390,31 @@ Now let's open a file and test it!
 
 Wow, that wasn't so bad, and we nearly have a complete modern IDE!
 
-# Installing linters & auto-formatters
+# Setting up automatic code formatting
+
+You know what pairs well with language servers? Automatic code formatting! For this, we are going to use a fantastic plugin [conform.nvim](https://github.com/stevearc/conform.nvim). It's important to note that this plugin doesn't handle the installation of linters or formatters.
+
+Let's create the configuration for our plugin. I've included a few examples to make understanding the configuration easier!
+
+```lua
+-- ~/.config/nvim/lua/config/conform
+vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
+
+require("conform").setup({
+    formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "isort", "black" },
+        zig = { "zigfmt" },
+    },
+})
+
+-- Autocommand that runs conform on on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function(args)
+        require("conform").format({ bufnr = args.buf })
+    end,
+})
+```
+
+And there you have it, you now have a modern IDE set up inside Neovim! Thank you so much for reading, I hope this tutorial has been helpful. If you have any feedback or questions, don't hesitate to reach out to me!
